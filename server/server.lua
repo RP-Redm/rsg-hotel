@@ -20,3 +20,18 @@ RegisterNetEvent('rsg-hotel:server:LeaveRoom', function(data)
 	print(currentbucket)
     TriggerClientEvent('rsg-hotel:client:leaveroomteleport', src, exithotel)
 end)
+
+-- create unique room id / -- RSGCore.Player.CreateRoomId()
+function RSGCore.Player.CreateRoomId()
+    local UniqueFound = false
+    local RoomId = nil
+    while not UniqueFound do
+        RoomId = (RSGCore.Shared.RandomInt(2) .. RSGCore.Shared.RandomInt(2))
+		print(RoomId)
+        local result = MySQL.prepare.await("SELECT COUNT(*) as count FROM player_rooms WHERE roomid = ?", { RoomId })
+        if result == 0 then
+            UniqueFound = true
+        end
+    end
+    return RoomId
+end
