@@ -3,19 +3,26 @@ local RSGCore = exports['rsg-core']:GetCoreObject()
 --------------------------------------------------------------------------------------------------
 
 -- rent room
-RegisterNetEvent('rsg-hotel:server:RentRoom', function(data)
+RegisterNetEvent('rsg-hotel:server:RentRoom', function(location)
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
     local citizenid = Player.PlayerData.citizenid
     local roomid = RSGCore.Player.CreateRoomId()
-    local location = data.location
+    local credit = Config.StartCredit
     local date = os.date()
-    MySQL.insert('INSERT INTO player_rooms (citizenid, location, roomid, date) VALUES (?, ?, ?, ?)', {
-        citizenid,
-        location,
-        roomid,
-        date
-    })
+    local cashBalance = Player.PlayerData.money["cash"]
+    if cashBalance >= credit then
+        MySQL.insert('INSERT INTO player_rooms (citizenid, location, credit, roomid, date) VALUES (?, ?, ?, ?, ?)', {
+            citizenid,
+            location,
+            credit,
+            roomid,
+            date
+        })
+        RSGCore.Functions.Notify(src, 'you rented room '..roomid, 'success')
+    else
+        RSGCore.Functions.Notify(src, 'not enought cash to rent a room!', 'error')
+    end    
 end)
 
 --------------------------------------------------------------------------------------------------
@@ -78,3 +85,31 @@ function RSGCore.Player.CreateRoomId()
     end
     return RoomId
 end
+
+--------------------------------------------------------------------------------------------------
+
+-- billing loop
+function BillingInterval()
+    local result = MySQL.query.await('SELECT * FROM player_rooms')
+    if result then
+        for i = 1, #result do
+            local row = result[i]
+            if Config.Debug == true then
+                print(row.citizenid, row.location, row.credit, row.roomid)
+            end
+            if row.credit >= Config.RentPerCycle then
+                local creditadjust = (row.credit - Config.RentPerCycle)
+                MySQL.update('UPDATE player_rooms SET credit = ? WHERE roomid = ? AND citizenid = ?', { creditadjust, row.roomid, row.citizenid })
+            else
+                MySQL.update('DELETE FROM player_rooms WHERE roomid = ? AND citizenid = ?', { row.roomid, row.citizenid })
+                print('not enough credit - room deleted')
+            end
+        end
+    end
+    SetTimeout(Config.BillingCycle * (60 * 1000), BillingInterval)
+end
+
+SetTimeout(Config.BillingCycle * (60 * 1000), BillingInterval) -- mins
+--SetTimeout(Config.BillingCycle * (60 * 60 * 1000), BillingInterval) -- hours
+
+--------------------------------------------------------------------------------------------------

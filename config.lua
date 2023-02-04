@@ -1,7 +1,13 @@
 Config = {}
 
-Config.Debug = true
+Config.Debug = false
 
+-- settings
+Config.BillingCycle = 1 -- in mins
+Config.RentPerCycle = 1 -- $ amount of rent added per cycle
+Config.StartCredit = 10 -- $ amount of credit added when renting room
+
+-- blip settings
 Config.Blip = {
     blipName = 'Hotel', -- Config.Blip.blipName
     blipSprite = 'blip_hotel_bed', -- Config.Blip.blipSprite

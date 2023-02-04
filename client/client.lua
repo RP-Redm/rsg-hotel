@@ -1,4 +1,9 @@
 local RSGCore = exports['rsg-core']:GetCoreObject()
+local isLoggedIn = false
+
+RegisterNetEvent('RSGCore:Client:OnPlayerLoaded', function()
+    isLoggedIn = true
+end)
 
 --------------------------------------------------------------------------------------------------
 
@@ -37,7 +42,7 @@ RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
             }
         },
         {
-            header = 'Rent a Room',
+            header = 'Rent a Room ($10 Deposit)',
             txt = '',
             icon = "fas fa-bed",
             params = {
@@ -79,18 +84,21 @@ RegisterNetEvent('rsg-hotel:client:EnterHotel', function(location)
             else
                 RSGCore.Functions.Notify('you don\'t have a room here!', 'primary')
             end            
-        end
+        else
+			RSGCore.Functions.Notify('you don\'t have any rooms rented!', 'primary')
+		end
     end)
 end)
 
 --------------------------------------------------------------------------------------------------
 
 -- rent a room
-RegisterNetEvent('rsg-hotel:client:RentRoom', function(location)
+RegisterNetEvent('rsg-hotel:client:RentRoom', function(data)
     RSGCore.Functions.TriggerCallback('rsg-hotel:server:GetOwnedRoom', function(result)
-        local roomlocation = result.location
-        if roomlocation == nil then
-            TriggerServerEvent('rsg-hotel:server:RentRoom', roomlocation)
+        local location = data.location
+        if result == nil then
+            print(data.location)
+            TriggerServerEvent('rsg-hotel:server:RentRoom', location)
         else
             RSGCore.Functions.Notify('you already have a room here!', 'primary')
         end
