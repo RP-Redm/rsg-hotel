@@ -77,7 +77,6 @@ function RSGCore.Player.CreateRoomId()
     local RoomId = nil
     while not UniqueFound do
         RoomId = (RSGCore.Shared.RandomInt(2) .. RSGCore.Shared.RandomInt(2))
-        print(RoomId)
         local result = MySQL.prepare.await("SELECT COUNT(*) as count FROM player_rooms WHERE roomid = ?", { RoomId })
         if result == 0 then
             UniqueFound = true
@@ -102,7 +101,7 @@ function BillingInterval()
                 MySQL.update('UPDATE player_rooms SET credit = ? WHERE roomid = ? AND citizenid = ?', { creditadjust, row.roomid, row.citizenid })
             else
                 MySQL.update('DELETE FROM player_rooms WHERE roomid = ? AND citizenid = ?', { row.roomid, row.citizenid })
-                print('not enough credit - room deleted')
+                print('not enough credit - '..row.roomid..' room deleted')
             end
         end
     end

@@ -34,7 +34,7 @@ RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
         {
             header = 'Check-In',
             txt = '',
-            icon = "fas fa-bed",
+            icon = "fas fa-concierge-bell",
             params = {
                 event = 'rsg-hotel:client:EnterHotel',
                 isServer = false,
@@ -42,11 +42,21 @@ RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
             }
         },
         {
-            header = 'Rent a Room ($10 Deposit)',
+            header = 'Rent a Room ($'..Config.StartCredit..' Deposit)',
             txt = '',
             icon = "fas fa-bed",
             params = {
                 event = 'rsg-hotel:client:RentRoom',
+                isServer = false,
+                args = { location = hotellocation }
+            }
+        },
+        {
+            header = 'Add Room Credit',
+            txt = '',
+            icon = "fas fa-dollar-sign",
+            params = {
+                event = 'rsg-hotel:client:AddRoomCredit',
                 isServer = false,
                 args = { location = hotellocation }
             }
@@ -97,7 +107,9 @@ RegisterNetEvent('rsg-hotel:client:RentRoom', function(data)
     RSGCore.Functions.TriggerCallback('rsg-hotel:server:GetOwnedRoom', function(result)
         local location = data.location
         if result == nil then
-            print(data.location)
+            if Config.Debug == true then
+				print(data.location)
+			end
             TriggerServerEvent('rsg-hotel:server:RentRoom', location)
         else
             RSGCore.Functions.Notify('you already have a room here!', 'primary')
