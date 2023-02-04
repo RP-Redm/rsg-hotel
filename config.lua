@@ -1,5 +1,7 @@
 Config = {}
 
+Config.Debug = true
+
 Config.Blip = {
     blipName = 'Hotel', -- Config.Blip.blipName
     blipSprite = 'blip_hotel_bed', -- Config.Blip.blipSprite

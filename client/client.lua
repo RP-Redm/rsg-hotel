@@ -8,7 +8,7 @@ Citizen.CreateThread(function()
         exports['rsg-core']:createPrompt(v.prompt, v.coords, RSGCore.Shared.Keybinds['J'], 'Open ' .. v.name, {
             type = 'client',
             event = 'rsg-hotel:client:menu',
-            args = { v.location, v.name },
+            args = { v.name, v.location },
         })
         if v.showblip == true then
             local HotelBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, v.coords)
@@ -20,20 +20,30 @@ Citizen.CreateThread(function()
 end)
 
 -- hotel menu
-RegisterNetEvent('rsg-hotel:client:menu', function(location, name)
+RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
     exports['rsg-menu']:openMenu({
         {
-            header = name,
+            header = hotelname,
             isMenuHeader = true,
+        },
+        {
+            header = 'Check-In',
+            txt = '',
+            icon = "fas fa-bed",
+            params = {
+                event = 'rsg-hotel:client:EnterHotel',
+                isServer = false,
+                args = { location = hotellocation }
+            }
         },
         {
             header = 'Rent a Room',
             txt = '',
-            icon = "fas fa-shopping-basket",
+            icon = "fas fa-bed",
             params = {
-                event = 'rsg-hotel:server:EnterRoom',
-                isServer = true,
-                args = { enterhotel = location }
+                event = 'rsg-hotel:client:RentRoom',
+                isServer = false,
+                args = { location = hotellocation }
             }
         },
         {
@@ -45,6 +55,45 @@ RegisterNetEvent('rsg-hotel:client:menu', function(location, name)
         },
     })
 	
+end)
+
+--------------------------------------------------------------------------------------------------
+
+-- check players and enter room
+RegisterNetEvent('rsg-hotel:client:EnterHotel', function(location)
+    RSGCore.Functions.TriggerCallback('rsg-hotel:server:GetOwnedRoom', function(result)
+        if result ~= nil then
+            if Config.Debug == true then
+                print(result.citizenid)
+                print(result.location)
+                print(result.roomid)
+                print(result.date)
+            end
+            if result.location == 'valentine' then
+                DoScreenFadeOut(500)
+                Wait(1000)
+                TriggerServerEvent('rsg-hotel:server:setroombucket', result.roomid) -- set player bucket
+                Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-323.935, 767.02294, 121.6327, 102.64147))
+                Wait(1500)
+                DoScreenFadeIn(1800)
+            else
+                RSGCore.Functions.Notify('you don\'t have a room here!', 'primary')
+            end            
+        end
+    end)
+end)
+
+--------------------------------------------------------------------------------------------------
+
+-- rent a room
+RegisterNetEvent('rsg-hotel:client:RentRoom', function(location)
+    RSGCore.Functions.TriggerCallback('rsg-hotel:server:GetOwnedRoom', function(result)
+        if result == nil then
+            TriggerServerEvent('rsg-hotel:server:RentRoom', location)
+        else
+            RSGCore.Functions.Notify('you already have a room here!', 'primary')
+        end
+    end)
 end)
 
 --------------------------------------------------------------------------------------------------
@@ -70,11 +119,11 @@ RegisterNetEvent('rsg-hotel:client:roommenu', function(location)
         {
             header = 'Leave Room',
             txt = '',
-            icon = "fas fa-shopping-basket",
+            icon = "fas fa-concierge-bell",
             params = {
-                event = 'rsg-hotel:server:LeaveRoom',
-                isServer = true,
-                args = { exithotel = location }
+                event = 'rsg-hotel:client:leaveroom',
+                isServer = false,
+                args = { exitroom = location }
             }
         },
         {
@@ -85,35 +134,26 @@ RegisterNetEvent('rsg-hotel:client:roommenu', function(location)
             }
         },
     })
-	
+    
 end)
 
 --------------------------------------------------------------------------------------------------
 
--- teleport to room
-RegisterNetEvent('rsg-hotel:client:roomteleport')
-AddEventHandler('rsg-hotel:client:roomteleport', function(enterhotel)
-    local ped = PlayerPedId()
-    DoScreenFadeOut(500)
-    Wait(1000)
-    if enterhotel == 'valentine' then
-        Citizen.InvokeNative(0x203BEFFDBE12E96A, ped, vector4(-323.935, 767.02294, 121.6327, 102.64147))
-    end
-    Wait(1500)
-    DoScreenFadeIn(1800)
-end)
-
 -- leave room
-RegisterNetEvent('rsg-hotel:client:leaveroomteleport')
-AddEventHandler('rsg-hotel:client:leaveroomteleport', function(exithotel)
-    local ped = PlayerPedId()
-    DoScreenFadeOut(500)
-    Wait(1000)
-    if exithotel == 'valentine' then
-        Citizen.InvokeNative(0x203BEFFDBE12E96A, ped, vector4(-322.2785, 770.36541, 121.63187, 103.80873))
+RegisterNetEvent('rsg-hotel:client:leaveroom')
+AddEventHandler('rsg-hotel:client:leaveroom', function(data)
+    if Config.Debug == true then
+        print(data.exitroom)
     end
-    Wait(1500)
-    DoScreenFadeIn(1800)
+    local roomlocation = data.exitroom
+    if roomlocation == 'valentine' then
+        DoScreenFadeOut(500)
+        Wait(1000)
+        TriggerServerEvent('rsg-hotel:server:setdefaultbucket')
+        Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-328.99, 772.95, 117.45, 13.64))
+        Wait(1500)
+        DoScreenFadeIn(1800)
+    end
 end)
 
 --------------------------------------------------------------------------------------------------
@@ -134,3 +174,5 @@ end)
     3 = DOORSTATE_HOLD_OPEN_POSITIVE,
     4 = DOORSTATE_HOLD_OPEN_NEGATIVE
 --]]
+
+--------------------------------------------------------------------------------------------------
