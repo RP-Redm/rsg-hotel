@@ -88,8 +88,9 @@ end)
 -- rent a room
 RegisterNetEvent('rsg-hotel:client:RentRoom', function(location)
     RSGCore.Functions.TriggerCallback('rsg-hotel:server:GetOwnedRoom', function(result)
-        if result == nil then
-            TriggerServerEvent('rsg-hotel:server:RentRoom', location)
+        local roomlocation = result.location
+        if roomlocation == nil then
+            TriggerServerEvent('rsg-hotel:server:RentRoom', roomlocation)
         else
             RSGCore.Functions.Notify('you already have a room here!', 'primary')
         end
