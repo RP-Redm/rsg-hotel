@@ -52,16 +52,6 @@ RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
             }
         },
         {
-            header = 'Add Room Credit',
-            txt = '',
-            icon = "fas fa-dollar-sign",
-            params = {
-                event = 'rsg-hotel:client:AddRoomCredit',
-                isServer = false,
-                args = { location = hotellocation }
-            }
-        },
-        {
             header = 'Close Menu',
             txt = '',
             params = {
@@ -131,31 +121,73 @@ Citizen.CreateThread(function()
 end)
 
 -- room menu
-RegisterNetEvent('rsg-hotel:client:roommenu', function(location)
-    exports['rsg-menu']:openMenu({
-        {
-            header = 'Room Menu',
-            isMenuHeader = true,
-        },
-        {
+RegisterNetEvent('rsg-hotel:client:roommenu', function()
+    RSGCore.Functions.TriggerCallback('rsg-hotel:server:GetActiveRoom', function(result)
+        print(result.roomid)
+        local activeRoom = {
+            {
+                header = 'Hotel Room : '..result.roomid,
+                txt = '',
+                isMenuHeader = true
+            },
+        }
+        activeRoom[#activeRoom+1] = {
+            header = 'Add Credit',
+            txt = 'current credit $'..result.credit,
+            icon = "fas fa-dollar-sign",
+            params = {
+                event = "rsg-hotel:client:addcredit",
+                isServer = false,
+                args = { room = result.roomid, credit = result.credit },
+            }
+        }
+        activeRoom[#activeRoom+1] = {
             header = 'Leave Room',
             txt = '',
             icon = "fas fa-concierge-bell",
             params = {
                 event = 'rsg-hotel:client:leaveroom',
                 isServer = false,
-                args = { exitroom = location }
+                args = { exitroom = result.location }
             }
-        },
-        {
+        }
+        activeRoom[#activeRoom+1] = {
             header = 'Close Menu',
             txt = '',
             params = {
                 event = 'rsg-menu:closeMenu',
             }
-        },
+        }
+        exports['rsg-menu']:openMenu(activeRoom)
+    end)
+end)
+
+--------------------------------------------------------------------------------------------------
+
+RegisterNetEvent('rsg-hotel:client:addcredit', function(data)
+    local dialog = exports['rsg-input']:ShowInput({
+        header = "Add Credit to Room "..data.room,
+        submitText = "",
+        inputs = {
+            {
+                text = "Amount ($)",
+                name = "addcredit",
+                type = "number",
+                isRequired = true,
+                default = 10,
+            },
+        }
     })
-    
+    if dialog ~= nil then
+        for k,v in pairs(dialog) do
+            if Config.Debug == true then
+                print(dialog.addcredit)
+                print(data.room)
+            end
+            local newcredit = (data.credit + dialog.addcredit)
+            TriggerServerEvent('rsg-hotel:server:addcredit', newcredit, data.room)
+        end
+    end
 end)
 
 --------------------------------------------------------------------------------------------------

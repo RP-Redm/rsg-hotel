@@ -47,6 +47,25 @@ RSGCore.Functions.CreateCallback('rsg-hotel:server:GetOwnedRoom', function(sourc
     end
 end)
 
+-- get active room data
+RSGCore.Functions.CreateCallback('rsg-hotel:server:GetActiveRoom', function(source, cb)
+    local src = source
+    local Player = RSGCore.Functions.GetPlayer(src)
+    local result = MySQL.query.await('SELECT * FROM player_rooms WHERE citizenid = ? AND active = ?', { Player.PlayerData.citizenid, 1 })
+    if result[1] ~= nil then
+        return cb(result[1])
+    end
+    return cb(nil)
+end)
+
+RegisterNetEvent('rsg-hotel:server:addcredit', function(newcredit, roomid)
+    local src = source
+    MySQL.update('UPDATE player_rooms SET credit = ? WHERE roomid = ?', { newcredit, roomid })
+    RSGCore.Functions.Notify(src, 'room credit added for '..roomid, 'success')
+    Wait(5000)
+    RSGCore.Functions.Notify(src, 'your credit is now $'..newcredit, 'primary')
+end)
+
 --------------------------------------------------------------------------------------------------
 
 -- set room bucket
