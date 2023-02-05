@@ -152,6 +152,16 @@ RegisterNetEvent('rsg-hotel:client:roommenu', function()
             }
         }
         activeRoom[#activeRoom+1] = {
+            header = 'Mini-Bar',
+            txt = '',
+            icon = "fas fa-glass-cheers",
+            params = {
+                event = "rsg-hotel:client:minibar",
+                isServer = false,
+                args = { roomid = result.roomid },
+            }
+        }
+        activeRoom[#activeRoom+1] = {
             header = 'Leave Room',
             txt = '',
             icon = "fas fa-door-open",
@@ -228,6 +238,15 @@ RegisterNetEvent('rsg-hotel:client:roomlocker', function(data)
         slots = Config.StorageMaxSlots,
     })
     TriggerEvent("inventory:client:SetCurrentStash", 'room_'..data.roomid..'_'..data.location)
+end)
+
+RegisterNetEvent('rsg-hotel:client:minibar')
+AddEventHandler('rsg-hotel:client:minibar', function(data)
+    local ShopItems = {}
+    ShopItems.label = 'Room '..data.roomid..' Mini-Bar'
+    ShopItems.items = Config.MiniBar
+    ShopItems.slots = #Config.MiniBar
+    TriggerServerEvent("inventory:server:OpenInventory", "shop", "Config.MiniBar_"..math.random(1, 99), ShopItems)
 end)
 
 --------------------------------------------------------------------------------------------------

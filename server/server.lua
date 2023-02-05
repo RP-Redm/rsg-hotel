@@ -12,12 +12,12 @@ RegisterNetEvent('rsg-hotel:server:RentRoom', function(location)
     local date = os.date()
     local cashBalance = Player.PlayerData.money["cash"]
     if cashBalance >= credit then
-        MySQL.insert('INSERT INTO player_rooms (citizenid, location, credit, roomid, date) VALUES (?, ?, ?, ?, ?)', {
+        MySQL.insert('INSERT INTO player_rooms (citizenid, location, credit, roomid, rentdate) VALUES (?, ?, ?, ?, ?)', {
             citizenid,
             location,
             credit,
             roomid,
-            date
+            rentdate
         })
         Player.Functions.RemoveMoney("cash", credit, "room-rental")
         RSGCore.Functions.Notify(src, 'you rented room '..roomid, 'success')

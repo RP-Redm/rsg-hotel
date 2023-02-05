@@ -9,6 +9,18 @@ Config.StartCredit = 10 -- $ amount of credit added when renting room
 Config.StorageMaxWeight = 4000000
 Config.StorageMaxSlots = 48
 
+-- room service
+Config.MiniBar = {
+    [1] = { name = "bread",       price = 0,   amount = 2,  info = {}, type = "item", slot = 1, },
+    [2] = { name = "water",       price = 0,   amount = 2,  info = {}, type = "item", slot = 2, },
+    [3] = { name = "beer",        price = 0,   amount = 2,  info = {}, type = "item", slot = 3, },
+    [4] = { name = "coffee",      price = 0,   amount = 2,  info = {}, type = "item", slot = 4, },
+    [5] = { name = "stew",        price = 0,   amount = 2,  info = {}, type = "item", slot = 5, },
+    [6] = { name = "cooked_meat", price = 0,   amount = 2,  info = {}, type = "item", slot = 6, },
+    [7] = { name = "cooked_fish", price = 0,   amount = 2,  info = {}, type = "item", slot = 7, },
+    [8] = { name = "cigar",       price = 0,   amount = 2,  info = {}, type = "item", slot = 8, },
+}
+
 -- blip settings
 Config.Blip = {
     blipName = 'Hotel', -- Config.Blip.blipName
