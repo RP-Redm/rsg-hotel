@@ -7,6 +7,9 @@ RegisterNetEvent('rsg-hotel:server:RentRoom', function(data)
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
     local citizenid = Player.PlayerData.citizenid
+    local firstname = Player.PlayerData.charinfo.firstname
+    local lastname = Player.PlayerData.charinfo.lastname
+    local fullname = (firstname..' '..lastname)
     local location = data.location
     local result = MySQL.prepare.await('SELECT COUNT(*) FROM player_rooms WHERE location = ? AND citizenid = ?', { location, citizenid })
     if result == 0 then
@@ -15,8 +18,9 @@ RegisterNetEvent('rsg-hotel:server:RentRoom', function(data)
         local date = os.date()
         local cashBalance = Player.PlayerData.money["cash"]
         if cashBalance >= credit then
-            MySQL.insert('INSERT INTO player_rooms (citizenid, location, credit, roomid) VALUES (?, ?, ?, ?)', {
+            MySQL.insert('INSERT INTO player_rooms (citizenid, fullname, location, credit, roomid) VALUES (?, ?, ?, ?, ?)', {
                 citizenid,
+                fullname,
                 location,
                 credit,
                 roomid
