@@ -54,12 +54,13 @@ RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
         {
             header = 'Close Menu',
             txt = '',
+            icon = "fas fa-times",
             params = {
                 event = 'rsg-menu:closeMenu',
             }
         },
     })
-	
+    
 end)
 
 --------------------------------------------------------------------------------------------------
@@ -85,8 +86,8 @@ RegisterNetEvent('rsg-hotel:client:EnterHotel', function(location)
                 RSGCore.Functions.Notify('you don\'t have a room here!', 'primary')
             end            
         else
-			RSGCore.Functions.Notify('you don\'t have any rooms rented!', 'primary')
-		end
+            RSGCore.Functions.Notify('you don\'t have any rooms rented!', 'primary')
+        end
     end)
 end)
 
@@ -123,7 +124,6 @@ end)
 -- room menu
 RegisterNetEvent('rsg-hotel:client:roommenu', function()
     RSGCore.Functions.TriggerCallback('rsg-hotel:server:GetActiveRoom', function(result)
-        print(result.roomid)
         local activeRoom = {
             {
                 header = 'Hotel Room : '..result.roomid,
@@ -184,6 +184,7 @@ RegisterNetEvent('rsg-hotel:client:roommenu', function()
         activeRoom[#activeRoom+1] = {
             header = 'Close Menu',
             txt = '',
+            icon = "fas fa-times",
             params = {
                 event = 'rsg-menu:closeMenu',
             }
