@@ -36,8 +36,8 @@ RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
             txt = '',
             icon = "fas fa-concierge-bell",
             params = {
-                event = 'rsg-hotel:client:EnterHotel',
-                isServer = false,
+                event = 'rsg-hotel:server:CheckIn',
+                isServer = true,
                 args = { location = hotellocation }
             }
         },
@@ -46,8 +46,8 @@ RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
             txt = '',
             icon = "fas fa-bed",
             params = {
-                event = 'rsg-hotel:client:RentRoom',
-                isServer = false,
+                event = 'rsg-hotel:server:RentRoom',
+                isServer = true,
                 args = { location = hotellocation }
             }
         },
@@ -65,47 +65,22 @@ end)
 
 --------------------------------------------------------------------------------------------------
 
--- check players and enter room
-RegisterNetEvent('rsg-hotel:client:EnterHotel', function(location)
-    RSGCore.Functions.TriggerCallback('rsg-hotel:server:GetOwnedRoom', function(result)
-        if result ~= nil then
-            if Config.Debug == true then
-                print(result.citizenid)
-                print(result.location)
-                print(result.roomid)
-                print(result.date)
-            end
-            if result.location == 'valentine' then
-                DoScreenFadeOut(500)
-                Wait(1000)
-                TriggerServerEvent('rsg-hotel:server:setroombucket', result.roomid) -- set player bucket
-                Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-323.935, 767.02294, 121.6327, 102.64147))
-                Wait(1500)
-                DoScreenFadeIn(1800)
-            else
-                RSGCore.Functions.Notify('you don\'t have a room here!', 'primary')
-            end            
-        else
-            RSGCore.Functions.Notify('you don\'t have any rooms rented!', 'primary')
-        end
-    end)
-end)
-
---------------------------------------------------------------------------------------------------
-
--- rent a room
-RegisterNetEvent('rsg-hotel:client:RentRoom', function(data)
-    RSGCore.Functions.TriggerCallback('rsg-hotel:server:GetOwnedRoom', function(result)
-        local location = data.location
-        if result == nil then
-            if Config.Debug == true then
-                print(data.location)
-            end
-            TriggerServerEvent('rsg-hotel:server:RentRoom', location)
-        else
-            RSGCore.Functions.Notify('you already have a room here!', 'primary')
-        end
-    end)
+-- transfer player to room
+RegisterNetEvent('rsg-hotel:client:gotoRoom', function(location)
+    if location == 'valentine' then
+        DoScreenFadeOut(500)
+        Wait(1000)
+        Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-323.935, 767.02294, 121.6327, 102.64147))
+        Wait(1500)
+        DoScreenFadeIn(1800)
+    end
+    if location == 'stawberry' then
+        DoScreenFadeOut(500)
+        Wait(1000)
+        Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-1813.903, -370.0737, 166.49919, 269.52258))
+        Wait(1500)
+        DoScreenFadeIn(1800)
+    end
 end)
 
 --------------------------------------------------------------------------------------------------
@@ -235,6 +210,14 @@ AddEventHandler('rsg-hotel:client:leaveroom', function(data)
         Wait(1000)
         TriggerServerEvent('rsg-hotel:server:setdefaultbucket')
         Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-328.99, 772.95, 117.45, 13.64))
+        Wait(1500)
+        DoScreenFadeIn(1800)
+    end
+    if roomlocation == 'stawberry' then
+        DoScreenFadeOut(500)
+        Wait(1000)
+        TriggerServerEvent('rsg-hotel:server:setdefaultbucket')
+        Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-1814.274, -369.9327, 162.88313, 277.07699))
         Wait(1500)
         DoScreenFadeIn(1800)
     end

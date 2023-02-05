@@ -3,7 +3,7 @@ Config = {}
 Config.Debug = false
 
 -- settings
-Config.BillingCycle = 1 -- in mins
+Config.BillingCycle = 1 -- will remove credit every x hour/s
 Config.RentPerCycle = 1 -- $ amount of rent added per cycle
 Config.StartCredit = 10 -- $ amount of credit added when renting room
 Config.StorageMaxWeight = 4000000
@@ -36,6 +36,13 @@ Config.HotelLocations = {
         location = 'valentine', 
         coords = vector3(-325.7658, 774.46496, 117.45713),
         showblip = true
+    },
+    { -- stawberry
+        name = 'Stawberry Hotel', 
+        prompt = 'stawberryhotel', 
+        location = 'stawberry', 
+        coords = vector3(-1817.56, -370.8123, 163.29635),
+        showblip = true
     }, 
 }
 
@@ -45,11 +52,19 @@ Config.HotelRoom = {
         prompt = 'valhotelroom', 
         location = 'valentine', 
         coords = vector3(-323.935, 767.02294, 121.6327),
-    }, 
+    },
+    { -- stawberry
+        name = 'Stawberry Hotel Room', 
+        prompt = 'stawberryhotelroom', 
+        location = 'stawberry', 
+        coords = vector3(-1813.394, -368.9348, 166.49964),
+    },
 }
 
 Config.HotelDoors = {
-    238680582,
-    3765902977,
-    3049177115,
+    238680582, -- valentine
+    3765902977, -- valentine
+    3049177115, -- valentine
+	1407130373, -- stawberry
+	1654175864, -- stawberry
 }

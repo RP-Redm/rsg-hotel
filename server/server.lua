@@ -3,49 +3,57 @@ local RSGCore = exports['rsg-core']:GetCoreObject()
 --------------------------------------------------------------------------------------------------
 
 -- rent room
-RegisterNetEvent('rsg-hotel:server:RentRoom', function(location)
+RegisterNetEvent('rsg-hotel:server:RentRoom', function(data)
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
     local citizenid = Player.PlayerData.citizenid
-    local roomid = RSGCore.Player.CreateRoomId()
-    local credit = Config.StartCredit
-    local date = os.date()
-    local cashBalance = Player.PlayerData.money["cash"]
-    if cashBalance >= credit then
-        MySQL.insert('INSERT INTO player_rooms (citizenid, location, credit, roomid, rentdate) VALUES (?, ?, ?, ?, ?)', {
-            citizenid,
-            location,
-            credit,
-            roomid,
-            rentdate
-        })
-        Player.Functions.RemoveMoney("cash", credit, "room-rental")
-        RSGCore.Functions.Notify(src, 'you rented room '..roomid, 'success')
+    local location = data.location
+    local result = MySQL.prepare.await('SELECT COUNT(*) FROM player_rooms WHERE location = ? AND citizenid = ?', { location, citizenid })
+    if result == 0 then
+        local roomid = RSGCore.Player.CreateRoomId()
+        local credit = Config.StartCredit
+        local date = os.date()
+        local cashBalance = Player.PlayerData.money["cash"]
+        if cashBalance >= credit then
+            MySQL.insert('INSERT INTO player_rooms (citizenid, location, credit, roomid) VALUES (?, ?, ?, ?)', {
+                citizenid,
+                location,
+                credit,
+                roomid
+            })
+            Player.Functions.RemoveMoney("cash", credit, "room-rental")
+            RSGCore.Functions.Notify(src, 'you rented room '..roomid, 'success')
+        else
+            RSGCore.Functions.Notify(src, 'not enought cash to rent a room!', 'error')
+        end
     else
-        RSGCore.Functions.Notify(src, 'not enought cash to rent a room!', 'error')
-    end    
+        RSGCore.Functions.Notify(src, 'you already have a room here!', 'error')
+    end
+end)
+
+-- room check-in
+RegisterNetEvent('rsg-hotel:server:CheckIn', function(data)
+    local src = source
+    local Player = RSGCore.Functions.GetPlayer(src)
+    local citizenid = Player.PlayerData.citizenid
+    local location = data.location
+    local result = MySQL.prepare.await('SELECT COUNT(*) FROM player_rooms WHERE location = ? AND citizenid = ?', { location, citizenid })
+    if result ~= 0 then
+        local roomresult = MySQL.query.await('SELECT * FROM player_rooms WHERE location = ? AND citizenid = ?', { location, citizenid })
+        local roomid = roomresult[1].roomid
+        SetPlayerRoutingBucket(src, tonumber(roomid))
+        local currentbucket = GetPlayerRoutingBucket(src)
+        if Config.Debug == true then
+            print('Current Bucket:'..currentbucket)
+        end
+        MySQL.update('UPDATE player_rooms SET active = ? WHERE roomid = ? AND citizenid = ?', { 1, roomid, citizenid })
+        TriggerClientEvent('rsg-hotel:client:gotoRoom', src, location)
+    else
+        RSGCore.Functions.Notify(src, 'you don\'t have a room here!', 'error')
+    end
 end)
 
 --------------------------------------------------------------------------------------------------
-
--- get player room
-RSGCore.Functions.CreateCallback('rsg-hotel:server:GetOwnedRoom', function(source, cb, cid)
-    if cid ~= nil then
-        local result = MySQL.query.await('SELECT * FROM player_rooms WHERE citizenid = ?', { cid })
-        if result[1] ~= nil then
-            return cb(result[1])
-        end
-        return cb(nil)
-    else
-        local src = source
-        local Player = RSGCore.Functions.GetPlayer(src)
-        local result = MySQL.query.await('SELECT * FROM player_rooms WHERE citizenid = ?', { Player.PlayerData.citizenid })
-        if result[1] ~= nil then
-            return cb(result[1])
-        end
-        return cb(nil)
-    end
-end)
 
 -- get active room data
 RSGCore.Functions.CreateCallback('rsg-hotel:server:GetActiveRoom', function(source, cb)
@@ -67,19 +75,6 @@ RegisterNetEvent('rsg-hotel:server:addcredit', function(newcredit, roomid)
 end)
 
 --------------------------------------------------------------------------------------------------
-
--- set room bucket
-RegisterNetEvent('rsg-hotel:server:setroombucket', function(roomid)
-    local src = source
-    local Player = RSGCore.Functions.GetPlayer(src)
-    local bucket = roomid
-    SetPlayerRoutingBucket(src, tonumber(bucket))
-    local currentbucket = GetPlayerRoutingBucket(src)
-    if Config.Debug == true then
-        print('Current Bucket:'..currentbucket)
-    end
-    MySQL.update('UPDATE player_rooms SET active = ? WHERE roomid = ? AND citizenid = ?', { 1, roomid, Player.PlayerData.citizenid })
-end)
 
 -- set player default bucket
 RegisterNetEvent('rsg-hotel:server:setdefaultbucket', function()
@@ -129,10 +124,10 @@ function BillingInterval()
             end
         end
     end
-    SetTimeout(Config.BillingCycle * (60 * 1000), BillingInterval)
+    SetTimeout(Config.BillingCycle * (60 * 60 * 1000), BillingInterval) -- hours
 end
 
-SetTimeout(Config.BillingCycle * (60 * 1000), BillingInterval) -- mins
---SetTimeout(Config.BillingCycle * (60 * 60 * 1000), BillingInterval) -- hours
+SetTimeout(Config.BillingCycle * (60 * 60 * 1000), BillingInterval) -- hours
 
 --------------------------------------------------------------------------------------------------
+--SetTimeout(Config.BillingCycle * (60 * 1000), BillingInterval) -- mins
