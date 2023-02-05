@@ -108,8 +108,8 @@ RegisterNetEvent('rsg-hotel:client:RentRoom', function(data)
         local location = data.location
         if result == nil then
             if Config.Debug == true then
-				print(data.location)
-			end
+                print(data.location)
+            end
             TriggerServerEvent('rsg-hotel:server:RentRoom', location)
         else
             RSGCore.Functions.Notify('you already have a room here!', 'primary')

@@ -19,6 +19,7 @@ RegisterNetEvent('rsg-hotel:server:RentRoom', function(location)
             roomid,
             date
         })
+        Player.Functions.RemoveMoney("cash", credit, "room-rental")
         RSGCore.Functions.Notify(src, 'you rented room '..roomid, 'success')
     else
         RSGCore.Functions.Notify(src, 'not enought cash to rent a room!', 'error')
@@ -51,22 +52,26 @@ end)
 -- set room bucket
 RegisterNetEvent('rsg-hotel:server:setroombucket', function(roomid)
     local src = source
+    local Player = RSGCore.Functions.GetPlayer(src)
     local bucket = roomid
     SetPlayerRoutingBucket(src, tonumber(bucket))
     local currentbucket = GetPlayerRoutingBucket(src)
     if Config.Debug == true then
         print('Current Bucket:'..currentbucket)
     end
+    MySQL.update('UPDATE player_rooms SET active = ? WHERE roomid = ? AND citizenid = ?', { 1, roomid, Player.PlayerData.citizenid })
 end)
 
 -- set player default bucket
 RegisterNetEvent('rsg-hotel:server:setdefaultbucket', function()
     local src = source
+    local Player = RSGCore.Functions.GetPlayer(src)
     SetPlayerRoutingBucket(src, 0)
     local currentbucket = GetPlayerRoutingBucket(src)
     if Config.Debug == true then
         print('Current Bucket:'..currentbucket)
     end
+    MySQL.update('UPDATE player_rooms SET active = ? WHERE citizenid = ?', { 0, Player.PlayerData.citizenid })
 end)
 
 --------------------------------------------------------------------------------------------------
