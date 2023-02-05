@@ -142,9 +142,19 @@ RegisterNetEvent('rsg-hotel:client:roommenu', function()
             }
         }
         activeRoom[#activeRoom+1] = {
+            header = 'Room Locker',
+            txt = '',
+            icon = "fas fa-box",
+            params = {
+                event = "rsg-hotel:client:roomlocker",
+                isServer = false,
+                args = { roomid = result.roomid, location = result.location },
+            }
+        }
+        activeRoom[#activeRoom+1] = {
             header = 'Leave Room',
             txt = '',
-            icon = "fas fa-concierge-bell",
+            icon = "fas fa-door-open",
             params = {
                 event = 'rsg-hotel:client:leaveroom',
                 isServer = false,
@@ -207,6 +217,17 @@ AddEventHandler('rsg-hotel:client:leaveroom', function(data)
         Wait(1500)
         DoScreenFadeIn(1800)
     end
+end)
+
+--------------------------------------------------------------------------------------------------
+
+-- room storage locker
+RegisterNetEvent('rsg-hotel:client:roomlocker', function(data)
+    TriggerServerEvent("inventory:server:OpenInventory", "stash", 'room_'..data.roomid..'_'..data.location, {
+        maxweight = Config.StorageMaxWeight,
+        slots = Config.StorageMaxSlots,
+    })
+    TriggerEvent("inventory:client:SetCurrentStash", 'room_'..data.roomid..'_'..data.location)
 end)
 
 --------------------------------------------------------------------------------------------------
