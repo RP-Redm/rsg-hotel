@@ -81,6 +81,20 @@ RegisterNetEvent('rsg-hotel:client:gotoRoom', function(location)
         Wait(1500)
         DoScreenFadeIn(1800)
     end
+    if location == 'rhodes' then
+        DoScreenFadeOut(500)
+        Wait(1000)
+        Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(1331.4257, -1371.862, 80.490127, 259.164))
+        Wait(1500)
+        DoScreenFadeIn(1800)
+    end
+    if location == 'stdenis' then
+        DoScreenFadeOut(500)
+        Wait(1000)
+        Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(2637.925, -1222.1, 59.600513, 179.36787))
+        Wait(1500)
+        DoScreenFadeIn(1800)
+    end
 end)
 
 --------------------------------------------------------------------------------------------------
@@ -218,6 +232,22 @@ AddEventHandler('rsg-hotel:client:leaveroom', function(data)
         Wait(1000)
         TriggerServerEvent('rsg-hotel:server:setdefaultbucket')
         Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-1814.274, -369.9327, 162.88313, 277.07699))
+        Wait(1500)
+        DoScreenFadeIn(1800)
+    end
+    if roomlocation == 'rhodes' then
+        DoScreenFadeOut(500)
+        Wait(1000)
+        TriggerServerEvent('rsg-hotel:server:setdefaultbucket')
+        Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(1334.2458, -1368.744, 80.490165, 258.45336))
+        Wait(1500)
+        DoScreenFadeIn(1800)
+    end
+    if roomlocation == 'stdenis' then
+        DoScreenFadeOut(500)
+        Wait(1000)
+        TriggerServerEvent('rsg-hotel:server:setdefaultbucket')
+        Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(2633.2497, -1223.527, 59.594661, 176.20422))
         Wait(1500)
         DoScreenFadeIn(1800)
     end

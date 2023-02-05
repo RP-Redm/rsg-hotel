@@ -43,6 +43,20 @@ Config.HotelLocations = {
         location = 'stawberry', 
         coords = vector3(-1817.56, -370.8123, 163.29635),
         showblip = true
+    },
+    { -- rhodes
+        name = 'Rhodes Hotel', 
+        prompt = 'rhodeshotel', 
+        location = 'rhodes', 
+        coords = vector3(1339.4562, -1377.151, 80.48069),
+        showblip = true
+    }, 
+    { -- stdenis
+        name = 'Saint Denis Hotel', 
+        prompt = 'stdenishotel', 
+        location = 'stdenis', 
+        coords = vector3(2637.968, -1227.239, 53.380374),
+        showblip = true
     }, 
 }
 
@@ -59,6 +73,18 @@ Config.HotelRoom = {
         location = 'stawberry', 
         coords = vector3(-1813.394, -368.9348, 166.49964),
     },
+    { -- rhodes
+        name = 'Rhodes Hotel Room', 
+        prompt = 'rhodeshotelroom', 
+        location = 'rhodes', 
+        coords = vector3(1331.4257, -1371.862, 80.490127),
+    },
+    { -- stdenis
+        name = 'Saint Denis Hotel Room', 
+        prompt = 'stdenishotelroom', 
+        location = 'stdenis', 
+        coords = vector3(2637.925, -1222.1, 59.600513),
+    },
 }
 
 Config.HotelDoors = {
@@ -67,4 +93,10 @@ Config.HotelDoors = {
     3049177115, -- valentine
     1407130373, -- stawberry
     1654175864, -- stawberry
+    2046695029, -- rhodes
+    1555588463, -- stdenis
+    2693793043, -- stdenis
+    2999855503, -- stdenis
+    1275780106, -- stdenis
+    3461406868, -- stdenis
 }
