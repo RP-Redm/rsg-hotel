@@ -142,6 +142,16 @@ RegisterNetEvent('rsg-hotel:client:roommenu', function()
             }
         }
         activeRoom[#activeRoom+1] = {
+            header = 'Wardrobe',
+            txt = '',
+            icon = "fas fa-hat-cowboy-side",
+            params = {
+                event = "rsg-clothes:OpenOutfits",
+                isServer = false,
+                args = {},
+            }
+        }
+        activeRoom[#activeRoom+1] = {
             header = 'Room Locker',
             txt = '',
             icon = "fas fa-box",
