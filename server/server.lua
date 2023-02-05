@@ -66,8 +66,10 @@ RSGCore.Functions.CreateCallback('rsg-hotel:server:GetActiveRoom', function(sour
     return cb(nil)
 end)
 
-RegisterNetEvent('rsg-hotel:server:addcredit', function(newcredit, roomid)
+RegisterNetEvent('rsg-hotel:server:addcredit', function(newcredit, removemoney, roomid)
     local src = source
+    local Player = RSGCore.Functions.GetPlayer(src)
+    Player.Functions.RemoveMoney("cash", removemoney, "room-credit")
     MySQL.update('UPDATE player_rooms SET credit = ? WHERE roomid = ?', { newcredit, roomid })
     RSGCore.Functions.Notify(src, 'room credit added for '..roomid, 'success')
     Wait(5000)

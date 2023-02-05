@@ -65,6 +65,6 @@ Config.HotelDoors = {
     238680582, -- valentine
     3765902977, -- valentine
     3049177115, -- valentine
-	1407130373, -- stawberry
-	1654175864, -- stawberry
+    1407130373, -- stawberry
+    1654175864, -- stawberry
 }

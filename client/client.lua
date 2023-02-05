@@ -191,7 +191,7 @@ RegisterNetEvent('rsg-hotel:client:addcredit', function(data)
                 print(data.room)
             end
             local newcredit = (data.credit + dialog.addcredit)
-            TriggerServerEvent('rsg-hotel:server:addcredit', newcredit, data.room)
+            TriggerServerEvent('rsg-hotel:server:addcredit', newcredit, dialog.addcredit, data.room)
         end
     end
 end)
