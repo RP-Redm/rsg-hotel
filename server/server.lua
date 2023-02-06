@@ -119,14 +119,24 @@ function BillingInterval()
         for i = 1, #result do
             local row = result[i]
             if Config.Debug == true then
-                print(row.citizenid, row.location, row.credit, row.roomid)
+                print(row.citizenid, row.fullname, row.location, row.credit, row.roomid)
             end
             if row.credit >= Config.RentPerCycle then
                 local creditadjust = (row.credit - Config.RentPerCycle)
                 MySQL.update('UPDATE player_rooms SET credit = ? WHERE roomid = ? AND citizenid = ?', { creditadjust, row.roomid, row.citizenid })
             else
+                MySQL.insert('INSERT INTO telegrams (citizenid, recipient, sender, sendername, subject, sentDate, message) VALUES (?, ?, ?, ?, ?, ?, ?)', {
+                    row.citizenid,
+                    row.fullname,
+                    'NO-REPLY',
+                    'Hotel Reception',
+                    'Credit Ran Out!',
+                    os.date("%x"),
+                    'Due to lack of credit, you have been checked out of room '..row.roomid..' in '..row.location..'. Thanks for choosing our hotel.',
+                })
+                Wait(1000)
                 MySQL.update('DELETE FROM player_rooms WHERE roomid = ? AND citizenid = ?', { row.roomid, row.citizenid })
-                print('not enough credit - '..row.roomid..' room deleted')
+                TriggerEvent('rsg-log:server:CreateLog', 'hotel', 'Hotel Room Lost', 'red', row.fullname..' room '..row.roomid..' in '..row.location..' has been deleted')
             end
         end
     end
