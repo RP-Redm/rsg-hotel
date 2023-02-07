@@ -124,6 +124,18 @@ function BillingInterval()
             if row.credit >= Config.RentPerCycle then
                 local creditadjust = (row.credit - Config.RentPerCycle)
                 MySQL.update('UPDATE player_rooms SET credit = ? WHERE roomid = ? AND citizenid = ?', { creditadjust, row.roomid, row.citizenid })
+                local creditwarning = (Config.RentPerCycle * Config.CreditWarning)
+                if row.credit < creditwarning then
+                    MySQL.insert('INSERT INTO telegrams (citizenid, recipient, sender, sendername, subject, sentDate, message) VALUES (?, ?, ?, ?, ?, ?, ?)', {
+                        row.citizenid,
+                        row.fullname,
+                        'NO-REPLY',
+                        'Hotel Reception',
+                        'Credit Due to Run Out!',
+                        os.date("%x"),
+                        'Your credit for room '..row.roomid..' in '..row.location..' is due to run out!',
+                    })
+                end
             else
                 MySQL.insert('INSERT INTO telegrams (citizenid, recipient, sender, sendername, subject, sentDate, message) VALUES (?, ?, ?, ?, ?, ?, ?)', {
                     row.citizenid,

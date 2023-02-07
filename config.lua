@@ -5,6 +5,7 @@ Config.Debug = false
 -- settings
 Config.BillingCycle = 1 -- will remove credit every x hour/s
 Config.RentPerCycle = 1 -- $ amount of rent added per cycle
+Config.CreditWarning = 5 -- 5 x Config.RentPerCycle amount : warning will trigger when < : example 5 x 1 = 5 so telegram will trigger on 4 hours
 Config.StartCredit = 10 -- $ amount of credit added when renting room
 Config.StorageMaxWeight = 4000000
 Config.StorageMaxSlots = 48
