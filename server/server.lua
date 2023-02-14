@@ -26,12 +26,12 @@ RegisterNetEvent('rsg-hotel:server:RentRoom', function(data)
                 roomid
             })
             Player.Functions.RemoveMoney("cash", credit, "room-rental")
-            RSGCore.Functions.Notify(src, 'you rented room '..roomid, 'success')
+            RSGCore.Functions.Notify(src, Lang:t('success.you_rented_room')..roomid, 'success')
         else
-            RSGCore.Functions.Notify(src, 'not enought cash to rent a room!', 'error')
+            RSGCore.Functions.Notify(src, Lang:t('error.not_enought_cash_to_rent_room'), 'error')
         end
     else
-        RSGCore.Functions.Notify(src, 'you already have a room here!', 'error')
+        RSGCore.Functions.Notify(src, Lang:t('error.you_already_have_room_here'), 'error')
     end
 end)
 
@@ -53,7 +53,7 @@ RegisterNetEvent('rsg-hotel:server:CheckIn', function(data)
         MySQL.update('UPDATE player_rooms SET active = ? WHERE roomid = ? AND citizenid = ?', { 1, roomid, citizenid })
         TriggerClientEvent('rsg-hotel:client:gotoRoom', src, location)
     else
-        RSGCore.Functions.Notify(src, 'you don\'t have a room here!', 'error')
+        RSGCore.Functions.Notify(src, Lang:t('error.you_dont_have_room_here'), 'error')
     end
 end)
 
@@ -75,9 +75,9 @@ RegisterNetEvent('rsg-hotel:server:addcredit', function(newcredit, removemoney, 
     local Player = RSGCore.Functions.GetPlayer(src)
     Player.Functions.RemoveMoney("cash", removemoney, "room-credit")
     MySQL.update('UPDATE player_rooms SET credit = ? WHERE roomid = ?', { newcredit, roomid })
-    RSGCore.Functions.Notify(src, 'room credit added for '..roomid, 'success')
+    RSGCore.Functions.Notify(src, Lang:t('success.room_credit_added_for')..roomid, 'success')
     Wait(5000)
-    RSGCore.Functions.Notify(src, 'your credit is now $'..newcredit, 'primary')
+    RSGCore.Functions.Notify(src,  Lang:t('primary.your_credit_is_now')..newcredit, 'primary')
 end)
 
 --------------------------------------------------------------------------------------------------
