@@ -10,7 +10,7 @@ end)
 -- hotel prompts
 Citizen.CreateThread(function()
     for hotel, v in pairs(Config.HotelLocations) do
-        exports['rsg-core']:createPrompt(v.prompt, v.coords, RSGCore.Shared.Keybinds['J'], 'Open ' .. v.name, {
+        exports['rsg-core']:createPrompt(v.prompt, v.coords, RSGCore.Shared.Keybinds['J'], Lang:t('menu.open') .. v.name, {
             type = 'client',
             event = 'rsg-hotel:client:menu',
             args = { v.name, v.location },
@@ -32,7 +32,7 @@ RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
             isMenuHeader = true,
         },
         {
-            header = 'Check-In',
+            header = Lang:t('menu.check_in'),
             txt = '',
             icon = "fas fa-concierge-bell",
             params = {
@@ -42,7 +42,7 @@ RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
             }
         },
         {
-            header = 'Rent a Room ($'..Config.StartCredit..' Deposit)',
+            header = Lang:t('menu.rent_room_deposit',{startCredit = Config.StartCredit}),
             txt = '',
             icon = "fas fa-bed",
             params = {
@@ -52,7 +52,7 @@ RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
             }
         },
         {
-            header = 'Close Menu',
+            header = Lang:t('menu.close_menu'),
             txt = '',
             icon = "fas fa-times",
             params = {
@@ -102,7 +102,7 @@ end)
 -- room menu prompt
 Citizen.CreateThread(function()
     for hotelexit, v in pairs(Config.HotelRoom) do
-        exports['rsg-core']:createPrompt(v.prompt, v.coords, RSGCore.Shared.Keybinds['J'], 'Room Menu', {
+        exports['rsg-core']:createPrompt(v.prompt, v.coords, RSGCore.Shared.Keybinds['J'], Lang:t('menu.room_menu'), {
             type = 'client',
             event = 'rsg-hotel:client:roommenu',
             args = { v.location },
@@ -115,14 +115,14 @@ RegisterNetEvent('rsg-hotel:client:roommenu', function()
     RSGCore.Functions.TriggerCallback('rsg-hotel:server:GetActiveRoom', function(result)
         local activeRoom = {
             {
-                header = 'Hotel Room : '..result.roomid,
+                header = Lang:t('menu.hotel_room')..result.roomid,
                 txt = '',
                 isMenuHeader = true
             },
         }
         activeRoom[#activeRoom+1] = {
-            header = 'Add Credit',
-            txt = 'current credit $'..result.credit,
+            header = Lang:t('menu.add_credit'),
+            txt = Lang:t('text.current_credit')..result.credit,
             icon = "fas fa-dollar-sign",
             params = {
                 event = "rsg-hotel:client:addcredit",
@@ -131,7 +131,7 @@ RegisterNetEvent('rsg-hotel:client:roommenu', function()
             }
         }
         activeRoom[#activeRoom+1] = {
-            header = 'Wardrobe',
+            header = Lang:t('menu.wardrobe'),
             txt = '',
             icon = "fas fa-hat-cowboy-side",
             params = {
@@ -141,7 +141,7 @@ RegisterNetEvent('rsg-hotel:client:roommenu', function()
             }
         }
         activeRoom[#activeRoom+1] = {
-            header = 'Room Locker',
+            header = Lang:t('menu.room_locker'),
             txt = '',
             icon = "fas fa-box",
             params = {
@@ -161,7 +161,7 @@ RegisterNetEvent('rsg-hotel:client:roommenu', function()
             }
         }
         activeRoom[#activeRoom+1] = {
-            header = 'Leave Room',
+            header =  Lang:t('menu.leave_room'),
             txt = '',
             icon = "fas fa-door-open",
             params = {
@@ -171,7 +171,7 @@ RegisterNetEvent('rsg-hotel:client:roommenu', function()
             }
         }
         activeRoom[#activeRoom+1] = {
-            header = 'Close Menu',
+            header = Lang:t('menu.close_menu'),
             txt = '',
             icon = "fas fa-times",
             params = {
@@ -186,11 +186,11 @@ end)
 
 RegisterNetEvent('rsg-hotel:client:addcredit', function(data)
     local dialog = exports['rsg-input']:ShowInput({
-        header = "Add Credit to Room "..data.room,
+        header = Lang:t('menu.add_credit_room')..data.room,
         submitText = "",
         inputs = {
             {
-                text = "Amount ($)",
+                text = Lang:t('text.amount'),
                 name = "addcredit",
                 type = "number",
                 isRequired = true,
@@ -267,7 +267,7 @@ end)
 RegisterNetEvent('rsg-hotel:client:minibar')
 AddEventHandler('rsg-hotel:client:minibar', function(data)
     local ShopItems = {}
-    ShopItems.label = 'Room '..data.roomid..' Mini-Bar'
+    ShopItems.label = Lang:t('menu.room')..data.roomid..' Mini-Bar'
     ShopItems.items = Config.MiniBar
     ShopItems.slots = #Config.MiniBar
     TriggerServerEvent("inventory:server:OpenInventory", "shop", "Config.MiniBar_"..math.random(1, 99), ShopItems)
