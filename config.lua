@@ -38,10 +38,10 @@ Config.HotelLocations = {
         coords = vector3(-325.7658, 774.46496, 117.45713),
         showblip = true
     },
-    { -- stawberry
-        name = 'Stawberry Hotel', 
-        prompt = 'stawberryhotel', 
-        location = 'stawberry', 
+    { -- strawberry
+        name = 'Strawberry Hotel', 
+        prompt = 'strawberryhotel', 
+        location = 'strawberry', 
         coords = vector3(-1817.56, -370.8123, 163.29635),
         showblip = true
     },
@@ -68,10 +68,10 @@ Config.HotelRoom = {
         location = 'valentine', 
         coords = vector3(-323.935, 767.02294, 121.6327),
     },
-    { -- stawberry
-        name = 'Stawberry Hotel Room', 
-        prompt = 'stawberryhotelroom', 
-        location = 'stawberry', 
+    { -- strawberry
+        name = 'Strawberry Hotel Room', 
+        prompt = 'strawberryhotelroom', 
+        location = 'strawberry', 
         coords = vector3(-1813.394, -368.9348, 166.49964),
     },
     { -- rhodes
@@ -92,8 +92,8 @@ Config.HotelDoors = {
     238680582, -- valentine
     3765902977, -- valentine
     3049177115, -- valentine
-    1407130373, -- stawberry
-    1654175864, -- stawberry
+    1407130373, -- strawberry
+    1654175864, -- strawberry
     2046695029, -- rhodes
     1555588463, -- stdenis
     2693793043, -- stdenis
