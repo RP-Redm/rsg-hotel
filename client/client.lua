@@ -74,7 +74,7 @@ RegisterNetEvent('rsg-hotel:client:gotoRoom', function(location)
         Wait(1500)
         DoScreenFadeIn(1800)
     end
-    if location == 'stawberry' then
+    if location == 'strawberry' then
         DoScreenFadeOut(500)
         Wait(1000)
         Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-1813.903, -370.0737, 166.49919, 269.52258))
@@ -227,7 +227,7 @@ AddEventHandler('rsg-hotel:client:leaveroom', function(data)
         Wait(1500)
         DoScreenFadeIn(1800)
     end
-    if roomlocation == 'stawberry' then
+    if roomlocation == 'strawberry' then
         DoScreenFadeOut(500)
         Wait(1000)
         TriggerServerEvent('rsg-hotel:server:setdefaultbucket')
