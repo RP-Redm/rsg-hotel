@@ -58,7 +58,14 @@ Config.HotelLocations = {
         location = 'stdenis', 
         coords = vector3(2637.968, -1227.239, 53.380374),
         showblip = true
-    }, 
+    },
+    { -- blackwater
+        name        = 'Blackwater Hotel',
+        prompt      = 'blackwaterhotel',
+        location    = 'blackwater',
+        coords      = vector3(-815.73, -1318.86, 43.76),
+        showblip    = true
+    },
 }
 
 Config.HotelRoom = {
@@ -86,6 +93,12 @@ Config.HotelRoom = {
         location = 'stdenis', 
         coords = vector3(2637.925, -1222.1, 59.600513),
     },
+    { -- blackwater
+        name        = 'Blackwater Hotel Room',
+        prompt      = 'blackwaterhotelroom',
+        location    = 'blackwater',
+        coords      = vector3(-820.12, -1324.15, 47.97)
+    },
 }
 
 Config.HotelDoors = {
@@ -100,4 +113,5 @@ Config.HotelDoors = {
     2999855503, -- stdenis
     1275780106, -- stdenis
     3461406868, -- stdenis
+    254520182, --blackwater
 }
