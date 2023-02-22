@@ -102,6 +102,13 @@ RegisterNetEvent('rsg-hotel:client:gotoRoom', function(location)
         Wait(1500)
         DoScreenFadeIn(1800)
     end
+    if location == 'tumbleweed' then
+        DoScreenFadeOut(500)
+        Wait(1000)
+        Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-5513.73, -2972.29, 2.22, 21.03))
+        Wait(1500)
+        DoScreenFadeIn(1800)
+    end
 end)
 
 --------------------------------------------------------------------------------------------------
@@ -263,6 +270,14 @@ AddEventHandler('rsg-hotel:client:leaveroom', function(data)
         Wait(1000)
         TriggerServerEvent('rsg-hotel:server:setdefaultbucket')
         Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-819.7, -1313.11, 43.77, 248.03))
+        Wait(1500)
+        DoScreenFadeIn(1800)
+    end
+    if roomlocation == 'tumbleweed' then
+        DoScreenFadeOut(500)
+        Wait(1000)
+        TriggerServerEvent('rsg-hotel:server:setdefaultbucket')
+        Citizen.InvokeNative(0x203BEFFDBE12E96A, PlayerPedId(), vector4(-5518.85, -2976.54, -0.78, 108.9))
         Wait(1500)
         DoScreenFadeIn(1800)
     end
