@@ -73,6 +73,13 @@ Config.HotelLocations = {
         coords      = vector3(-5511.62, -2974.64, 2.22),
         showblip    = true
     },
+    { -- annesburg
+        name        = 'Annesburg Hotel',
+        prompt      = 'annesburghotel',
+        location    = 'annesburg',
+        coords      = vector3(2947.66, 1332.55, 44.46),
+        showblip    = true
+    },
 }
 
 Config.HotelRoom = {
@@ -112,6 +119,12 @@ Config.HotelRoom = {
         location    = 'tumbleweed',
         coords      = vector3(-5513.07, -2971.57, 2.23)
     },
+    { -- annesburg
+        name        = 'Annesburg Hotel Room',
+        prompt      = 'annesburghotelroom',
+        location    = 'annesburg',
+        coords      = vector3(2946.09, 1330.59, 44.46)
+    },
 }
 
 Config.HotelDoors = {
@@ -128,4 +141,5 @@ Config.HotelDoors = {
     3461406868, -- stdenis
     254520182, --blackwater
     2959320055, -- tumbleweed
+    1335986638, -- annesburg
 }
