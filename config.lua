@@ -66,6 +66,13 @@ Config.HotelLocations = {
         coords      = vector3(-815.73, -1318.86, 43.76),
         showblip    = true
     },
+    { -- tumbleweed
+        name        = 'Tumbleweed Hotel',
+        prompt      = 'tumbleweedhotel',
+        location    = 'tumbleweed',
+        coords      = vector3(-5511.62, -2974.64, 2.22),
+        showblip    = true
+    },
 }
 
 Config.HotelRoom = {
@@ -99,6 +106,12 @@ Config.HotelRoom = {
         location    = 'blackwater',
         coords      = vector3(-820.12, -1324.15, 47.97)
     },
+    { -- tumbleweed
+        name        = 'Tumbleweed Hotel Room',
+        prompt      = 'tumbleweedhotelroom',
+        location    = 'tumbleweed',
+        coords      = vector3(-5513.07, -2971.57, 2.23)
+    },
 }
 
 Config.HotelDoors = {
@@ -114,4 +127,5 @@ Config.HotelDoors = {
     1275780106, -- stdenis
     3461406868, -- stdenis
     254520182, --blackwater
+    2959320055, -- tumbleweed
 }
