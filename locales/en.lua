@@ -3,6 +3,7 @@ local Translations = {
         not_enought_cash_to_rent_room = 'not enought cash to rent a room!',
         you_already_have_room_here = 'you already have a room here!',
         you_dont_have_room_here = "you don\'t have a room here!",
+        not_enough_cash = "you don\'t have enought cash for that!",
     },
     success = {
         you_rented_room = 'you rented room ',

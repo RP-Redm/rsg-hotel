@@ -73,11 +73,16 @@ end)
 RegisterNetEvent('rsg-hotel:server:addcredit', function(newcredit, removemoney, roomid)
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
-    Player.Functions.RemoveMoney("cash", removemoney, "room-credit")
-    MySQL.update('UPDATE player_rooms SET credit = ? WHERE roomid = ?', { newcredit, roomid })
-    RSGCore.Functions.Notify(src, Lang:t('success.room_credit_added_for')..roomid, 'success')
-    Wait(5000)
-    RSGCore.Functions.Notify(src,  Lang:t('primary.your_credit_is_now')..newcredit, 'primary')
+    local cashBalance = Player.PlayerData.money["cash"]
+    if cashBalance >= removemoney then
+        Player.Functions.RemoveMoney("cash", removemoney, "room-credit")
+        MySQL.update('UPDATE player_rooms SET credit = ? WHERE roomid = ?', { newcredit, roomid })
+        RSGCore.Functions.Notify(src, Lang:t('success.room_credit_added_for')..roomid, 'success')
+        Wait(5000)
+        RSGCore.Functions.Notify(src,  Lang:t('primary.your_credit_is_now')..newcredit, 'primary')
+    else
+        RSGCore.Functions.Notify(src,  Lang:t('error.not_enough_cash'), 'error')
+    end
 end)
 
 --------------------------------------------------------------------------------------------------
