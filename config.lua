@@ -9,6 +9,7 @@ Config.CreditWarning = 5 -- 5 x Config.RentPerCycle amount : warning will trigge
 Config.StartCredit = 10 -- $ amount of credit added when renting room
 Config.StorageMaxWeight = 4000000
 Config.StorageMaxSlots = 48
+Config.PurgeStorage = false -- purge hotel inventory when the hotel is taken back by not paying taxes (disabled by default)
 
 -- room service
 Config.MiniBar = {

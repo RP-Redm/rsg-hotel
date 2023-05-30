@@ -153,6 +153,11 @@ function BillingInterval()
                 })
                 Wait(1000)
                 MySQL.update('DELETE FROM player_rooms WHERE roomid = ? AND citizenid = ?', { row.roomid, row.citizenid })
+
+                if Config.PurgeStorage then
+                    MySQL.update('DELETE FROM stashitems WHERE stash = ?', {'room_'..row.roomid..'_'..row.location})
+                end
+
                 TriggerEvent('rsg-log:server:CreateLog', 'hotel', 'Hotel Room Lost', 'red', row.fullname..' room '..row.roomid..' in '..row.location..' has been deleted')
             end
         end
