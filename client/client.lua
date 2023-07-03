@@ -26,6 +26,7 @@ end)
 
 -- hotel menu
 RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
+    TriggerEvent('rsg-horses:client:FleeHorse')
     exports['rsg-menu']:openMenu({
         {
             header = hotelname,
