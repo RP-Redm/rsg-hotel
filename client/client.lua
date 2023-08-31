@@ -24,44 +24,36 @@ Citizen.CreateThread(function()
     end
 end)
 
--- hotel menu
 RegisterNetEvent('rsg-hotel:client:menu', function(hotelname, hotellocation)
     TriggerEvent('rsg-horses:client:FleeHorse')
-    exports['rsg-menu']:openMenu({
+    lib.registerContext(
         {
-            header = hotelname,
-            isMenuHeader = true,
-        },
-        {
-            header = Lang:t('menu.check_in'),
-            txt = '',
-            icon = "fas fa-concierge-bell",
-            params = {
-                event = 'rsg-hotel:server:CheckIn',
-                isServer = true,
-                args = { location = hotellocation }
+            id = 'hotel_menu',
+            title = hotelname,
+            position = 'top-right',
+            options = {
+                {
+                    title = Lang:t('menu.check_in'),
+                    description = '',
+                    icon = 'fas fa-concierge-bell',
+                    serverEvent = 'rsg-hotel:server:CheckIn',
+                    args = {
+                        location = hotellocation
+                    }
+                },
+                {
+                    title = Lang:t('menu.rent_room_deposit',{startCredit = Config.StartCredit}),
+                    description = '',
+                    icon = 'fas fa-bed',
+                    serverEvent = 'rsg-hotel:server:RentRoom',
+                    args = {
+                        location = hotellocation
+                    }
+                },
             }
-        },
-        {
-            header = Lang:t('menu.rent_room_deposit',{startCredit = Config.StartCredit}),
-            txt = '',
-            icon = "fas fa-bed",
-            params = {
-                event = 'rsg-hotel:server:RentRoom',
-                isServer = true,
-                args = { location = hotellocation }
-            }
-        },
-        {
-            header = Lang:t('menu.close_menu'),
-            txt = '',
-            icon = "fas fa-times",
-            params = {
-                event = 'rsg-menu:closeMenu',
-            }
-        },
-    })
-    
+        }
+    )
+    lib.showContext('hotel_menu')
 end)
 
 --------------------------------------------------------------------------------------------------
@@ -132,104 +124,74 @@ Citizen.CreateThread(function()
     end
 end)
 
--- room menu
-RegisterNetEvent('rsg-hotel:client:roommenu', function()
+RegisterNetEvent('rsg-hotel:client:roommenu', function(location)
     RSGCore.Functions.TriggerCallback('rsg-hotel:server:GetActiveRoom', function(result)
-        local activeRoom = {
+        lib.registerContext(
             {
-                header = Lang:t('menu.hotel_room')..result.roomid,
-                txt = '',
-                isMenuHeader = true
-            },
-        }
-        activeRoom[#activeRoom+1] = {
-            header = Lang:t('menu.add_credit'),
-            txt = Lang:t('text.current_credit')..result.credit,
-            icon = "fas fa-dollar-sign",
-            params = {
-                event = "rsg-hotel:client:addcredit",
-                isServer = false,
-                args = { room = result.roomid, credit = result.credit },
+                id = 'room_menu',
+                title = Lang:t('menu.hotel_room')..result.roomid,
+                position = 'top-right',
+                options = {
+                    {
+                        title = Lang:t('menu.add_credit'),
+                        description = Lang:t('text.current_credit')..result.credit,
+                        icon = 'fas fa-dollar-sign',
+                        event = 'rsg-hotel:client:addcredit',
+                        args = { room = result.roomid, credit = result.credit },
+                    },
+                    {
+                        title = Lang:t('menu.wardrobe'),
+                        description = '',
+                        icon = 'fas fa-hat-cowboy-side',
+                        event = 'rsg-clothes:OpenOutfits',
+                        args = { },
+                    },
+                    {
+                        title = Lang:t('menu.room_locker'),
+                        description = '',
+                        icon = 'fas fa-box',
+                        event = 'rsg-hotel:client:roomlocker',
+                        args = { roomid = result.roomid, location = result.location },
+                    },
+                    {
+                        title = 'Mini-Bar',
+                        description = '',
+                        icon = 'fas fa-glass-cheers',
+                        event = 'rsg-hotel:client:minibar',
+                        args = { roomid = result.roomid },
+                    },
+                    {
+                        title = Lang:t('menu.leave_room'),
+                        description = '',
+                        icon = 'fas fa-door-open',
+                        event = 'rsg-hotel:client:leaveroom',
+                        args = { exitroom = result.location },
+                    },
+                }
             }
-        }
-        activeRoom[#activeRoom+1] = {
-            header = Lang:t('menu.wardrobe'),
-            txt = '',
-            icon = "fas fa-hat-cowboy-side",
-            params = {
-                event = "rsg-clothes:OpenOutfits",
-                isServer = false,
-                args = {},
-            }
-        }
-        activeRoom[#activeRoom+1] = {
-            header = Lang:t('menu.room_locker'),
-            txt = '',
-            icon = "fas fa-box",
-            params = {
-                event = "rsg-hotel:client:roomlocker",
-                isServer = false,
-                args = { roomid = result.roomid, location = result.location },
-            }
-        }
-        activeRoom[#activeRoom+1] = {
-            header = 'Mini-Bar',
-            txt = '',
-            icon = "fas fa-glass-cheers",
-            params = {
-                event = "rsg-hotel:client:minibar",
-                isServer = false,
-                args = { roomid = result.roomid },
-            }
-        }
-        activeRoom[#activeRoom+1] = {
-            header =  Lang:t('menu.leave_room'),
-            txt = '',
-            icon = "fas fa-door-open",
-            params = {
-                event = 'rsg-hotel:client:leaveroom',
-                isServer = false,
-                args = { exitroom = result.location }
-            }
-        }
-        activeRoom[#activeRoom+1] = {
-            header = Lang:t('menu.close_menu'),
-            txt = '',
-            icon = "fas fa-times",
-            params = {
-                event = 'rsg-menu:closeMenu',
-            }
-        }
-        exports['rsg-menu']:openMenu(activeRoom)
+        )
+        lib.showContext('room_menu')
     end)
 end)
 
 --------------------------------------------------------------------------------------------------
 
 RegisterNetEvent('rsg-hotel:client:addcredit', function(data)
-    local dialog = exports['rsg-input']:ShowInput({
-        header = Lang:t('menu.add_credit_room')..data.room,
-        submitText = "",
-        inputs = {
-            {
-                text = Lang:t('text.amount'),
-                name = "addcredit",
-                type = "number",
-                isRequired = true,
-                default = 10,
-            },
-        }
+    local input = lib.inputDialog(Lang:t('menu.add_credit_room')..data.room, {
+        { 
+            type = 'number',
+            label = 'Add Credit', 
+            icon = 'fa-solid fa-dollar-sign'
+        },
     })
-    if dialog ~= nil then
-        for k,v in pairs(dialog) do
-            if Config.Debug == true then
-                print(dialog.addcredit)
-                print(data.room)
-            end
-            local newcredit = (data.credit + dialog.addcredit)
-            TriggerServerEvent('rsg-hotel:server:addcredit', tonumber(newcredit), tonumber(dialog.addcredit), data.room)
-        end
+    
+    if not input then
+        return
     end
+    
+    local newcredit = (tonumber(input[1]) + data.credit)
+    
+    TriggerServerEvent('rsg-hotel:server:addcredit', tonumber(newcredit), tonumber(input[1]), data.room)
 end)
 
 --------------------------------------------------------------------------------------------------

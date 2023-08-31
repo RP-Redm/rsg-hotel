@@ -6,6 +6,7 @@ author 'RexShack#3041'
 description 'rsg-hotel'
 
 shared_scripts {
+    '@ox_lib/init.lua',
     '@rsg-core/shared/locale.lua',
     'locales/en.lua',
     'locales/*.lua',
@@ -23,8 +24,7 @@ server_scripts {
 
 dependencies {
     'rsg-core',
-    'rsg-menu',
-    'rsg-input',
+    'ox_lib',
 }
 
 lua54 'yes'
