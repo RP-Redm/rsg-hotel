@@ -17,7 +17,7 @@ Citizen.CreateThread(function()
         })
         if v.showblip == true then
             local HotelBlip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, v.coords)
-            SetBlipSprite(HotelBlip, GetHashKey(Config.Blip.blipSprite), true)
+            SetBlipSprite(HotelBlip, joaat(Config.Blip.blipSprite), true)
             SetBlipScale(HotelBlip, Config.Blip.blipScale)
             Citizen.InvokeNative(0x9CB1A1623062F402, HotelBlip, Config.Blip.blipName)
         end
