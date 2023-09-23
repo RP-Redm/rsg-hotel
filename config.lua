@@ -64,7 +64,7 @@ Config.HotelLocations = {
         name        = 'Blackwater Hotel',
         prompt      = 'blackwaterhotel',
         location    = 'blackwater',
-        coords      = vector3(-815.73, -1318.86, 43.76),
+        coords      = vector3(-819.1097, -1316.132, 43.678932),
         showblip    = true
     },
     { -- tumbleweed
